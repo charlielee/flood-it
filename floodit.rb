@@ -21,7 +21,7 @@ def init()
   clear
 
   # Load the main menu
-  menu
+  display_menu
 end
 
 # Public: Display the main menu
@@ -29,7 +29,7 @@ end
 # columns    - The currently selected width of the game board
 # rows       - The currently selected height of the game board
 # best_score - The lowest number of the turns the player has taken to complete the game
-def menu(columns=14, rows=9, best_score=0)
+def display_menu(columns=14, rows=9, best_score=0)
   # Display menu options
   puts "Main menu:"
   puts "s = Start game"
@@ -64,13 +64,13 @@ def menu(columns=14, rows=9, best_score=0)
       height = gets.chomp.to_i
 
       # Reload the menu with the new dimensions stored
-      menu width, height
+      display_menu width, height
     when "q"
       # Exit the program
       exit
     else
       # Reload the main menu if input is not recognised
-      menu columns, rows, best_score
+      display_menu columns, rows, best_score
   end
 end
 
