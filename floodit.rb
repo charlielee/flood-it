@@ -36,7 +36,7 @@ def menu(columns=14, rows=9, best_score=0)
   puts "c = Change size"
   puts "q = Quit"
 
-  # Display high score if there is one
+  # Display best score if there is one
   if best_score > 0
     puts "Best game: #{$best_score} turns"
   else
@@ -55,14 +55,22 @@ def menu(columns=14, rows=9, best_score=0)
       # Starts the game with a new board
       start_game columns, rows
     when "c"
-      # Change the size of the board
-      puts "CHANGE SIZE"
+      # Change the width of the board
+      print "Width (Currently #{columns})? "
+      width = gets.chomp.to_i
+
+      # Change the height of the board
+      print "Height (Currently #{rows})? "
+      height = gets.chomp.to_i
+
+      # Reload the menu with the new dimensions stored
+      menu width, height
     when "q"
       # Exit the program
       exit
     else
       # Reload the main menu if input is not recognised
-      menu
+      menu columns, rows, best_score
   end
 end
 
