@@ -3,7 +3,7 @@ require "console_splash"
 
 # Internal: Clears the screen
 def clear
-  system "cls" or "clear"
+  system("cls") || system("clear")
 end
 
 # Public: Initialise the program
