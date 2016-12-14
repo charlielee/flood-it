@@ -132,6 +132,7 @@ def print_board(board)
       print "  ".colorize( :background => board[row][column])
     end
   end
+  puts
 end
 
 # Internal: Change a square to a new color and update the squares joined to it that were previously the same color
@@ -148,8 +149,8 @@ def update_adjacent(board, column, row, new_color)
   board[row][column] = new_color
 
   # Check is square ABOVE was the same color
-  if old_color == board[row+1][column]
-    update_adjacent board, column, row+1, new_color
+  if old_color == board[row-1][column] && (row-1 >= 0)
+    update_adjacent board, column, row-1, new_color
   end
 
   # Check if the square to the RIGHT was the same color
@@ -158,12 +159,12 @@ def update_adjacent(board, column, row, new_color)
   end
 
   # Check if the square BELOW was the same color
-  if old_color == board[row-1][column]
-    update_adjacent board, column, row-1, new_color
+  if old_color == board[row+1][column] 
+    update_adjacent board, column, row+1, new_color
   end
 
   # Check if the square to the LEFT was the same color
-  if old_color == board[row][column-1]
+  if old_color == board[row][column-1] && (column-1 >= 0)
     update_adjacent board, column-1, row, new_color
   end
 
