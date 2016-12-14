@@ -86,7 +86,7 @@ def start_game(columns, rows, best_score)
   cur_completed  = 0
   no_of_turns    = 0
 
-  while cur_completed != 100
+  while !check_win cur_board
     # Display the current board
     print_board cur_board
 
@@ -179,6 +179,30 @@ def print_board(board)
   end
 end
 
+# Internal: Converts a single letter into a color symbol
+#
+# letter - A string of length 1 to convert to a color symbol
+#
+# Returns the color symbol beginning with the letter entered
+def to_color(letter)
+  case letter
+    when "r"
+      return :red
+    when "g"
+      return :green
+    when "b"
+      return :blue
+    when "c"
+      return :cyan
+    when "m"
+      return :magenta
+    when "y"
+      return :yellow
+    else
+      return letter
+  end
+end
+
 # Internal: Change a square to a new color and update the squares joined to it that were previously the same color
 #
 # board  - The 2d array of colors to use
@@ -238,27 +262,29 @@ def get_amount(board, color)
   return (no_of_squares.to_f / total_squares.to_f * 100).round.to_i
 end
 
-# Internal: Converts a single letter into a color symbol
+# Internal: Get whether a game has been won or not
 #
-# letter - A string of length 1 to convert to a color symbol
+# board - The 2d array of colors to use
 #
-# Returns the color symbol beginning with the letter entered
-def to_color(letter)
-  case letter
-    when "r"
-      return :red
-    when "g"
-      return :green
-    when "b"
-      return :blue
-    when "c"
-      return :cyan
-    when "m"
-      return :magenta
-    when "y"
-      return :yellow
-    else
-      return letter
+# Returns a boolean of the game's completion status
+def check_win(board)
+  total_squares = board.length * board[0].length
+  completed_squares = 0
+  height        = board.length
+  width         = board[0].length
+
+  # Loop through each square of the board
+  (0...height).each do |row|
+    (0...width).each do |column|
+      # Iterate if square of board is same color as top left corner square
+      completed_squares += 1 if (board[row][column] == board[0][0])
+    end
+  end
+
+  if total_squares == completed_squares
+    return true
+  else
+    return false
   end
 end
 
