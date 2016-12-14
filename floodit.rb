@@ -80,16 +80,15 @@ end
 # rows    - The height of the board
 def start_game(columns, rows)
   cur_board      = get_board(columns, rows)
-  cur_completion = 0
+  cur_completed  = 0
   no_of_turns    = 0
-  completed      = false
 
-  while completed == false
+  while cur_completed != 100
     # Display the current board
     print_board cur_board
 
     # Messages
-    puts "Current completion: #{cur_completion}"
+    puts "Current completion: #{cur_completed}%"
     puts "Number of turns: #{no_of_turns}"
 
     # User chooses a color by entering the first letter of that color
@@ -99,9 +98,16 @@ def start_game(columns, rows)
     # Convert the string of length 1 to a color symbol
     cur_color = to_color cur_color
 
-    # Update color of top left square and any other squares that were previously the same color as it
+    # Update color of top left square and any squares joint to it
     update_adjacent cur_board, 0, 0, cur_color
 
+    # Update the number of turns
+    no_of_turns += 1
+
+    # Update amount completed
+    cur_completed = get_amount cur_board, cur_color
+
+    # Clear the screen
     clear
   end
 end
@@ -165,32 +171,58 @@ def update_adjacent(board, column, row, new_color)
   board[row][column] = new_color
 
   # Check is square ABOVE was the same color
-  if old_color == board[row-1][column] && (row-1 >= 0)
+  if (row-1 >= 0) && old_color == board[row-1][column]
     update_adjacent board, column, row-1, new_color
   end
 
   # Check if the square to the RIGHT was the same color
-  if old_color == board[row][column+1]
+  if  (column+1 < board[0].length) && old_color == board[row][column+1]
     update_adjacent board, column+1, row, new_color
   end
 
   # Check if the square BELOW was the same color
-  if old_color == board[row+1][column] 
+  if (row+1 < board.length) && old_color == board[row+1][column]
     update_adjacent board, column, row+1, new_color
   end
 
   # Check if the square to the LEFT was the same color
-  if old_color == board[row][column-1] && (column-1 >= 0)
+  if (column-1 >= 0) && old_color == board[row][column-1]
     update_adjacent board, column-1, row, new_color
   end
 
 end
 
-# Internal: Convert a single letter into a color symbol
+# Internal: Get the percentage of squares that are a particular color
 #
-# color - A string of length 1 to convert to a color symbol
-def to_color(color)
-  case color
+# board - The 2d array of colors to use
+# color - The color to check for
+#
+# Returns a value between 1 and 100 of how much of the board is the selected color
+def get_amount(board, color)
+  total_squares = board.length * board[0].length
+  no_of_squares = 0
+  height        = board.length
+  width         = board[0].length
+
+  # Loop through each square of the board
+  (0...height).each do |row|
+    (0...width).each do |column|
+      # Iterate if square of board matches color
+      no_of_squares += 1 if (color == board[row][column])
+    end
+  end
+
+  # Calculate the percentage of squares that match the selected color
+  return (no_of_squares.to_f / total_squares.to_f * 100).round.to_i
+end
+
+# Internal: Converts a single letter into a color symbol
+#
+# letter - A string of length 1 to convert to a color symbol
+#
+# Returns the color symbol beginning with the letter entered
+def to_color(letter)
+  case letter
     when "r"
       return :red
     when "g"
