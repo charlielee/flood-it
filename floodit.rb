@@ -1,5 +1,7 @@
 require "console_splash"
 
+$best_score = 0
+
 def get_board(width, height)
   # TODO: Implement this method
   #
@@ -19,6 +21,46 @@ def get_board(width, height)
   # of your implementation.
 end
 
+# Clears the screen
+def clear
+  system "cls" or "clear"
+end
+
+# Call the main menu
+def menu
+  puts "Main menu:"
+  puts "s = Start game"
+  puts "c = Change size"
+  puts "q = Quit"
+
+  # Display high score if there is one
+  if $best_score > 0
+    puts "Best game: #{$best_score} turns"
+  else
+    puts "No games played yet"
+  end
+  
+  # User input
+  print "Please enter your choice: "
+  input = gets.chomp
+
+  clear()
+
+  if input == "s"
+    # Starts the game with a new board
+    puts "START"
+  elsif input == "c"
+    # Change the size of the board
+    puts "CHANGE SIZE"
+  elsif input == "q"
+    # Exits the program
+    exit
+  else
+    menu
+  end
+end
+  
+
 # Splash screen
 splash = ConsoleSplash.new(25,88)
 splash.write_header("Flood-It", "Charles Lee", "0.0.1")
@@ -29,4 +71,7 @@ splash.splash
 
 # Press any key to continue
 gets()
-system "clear"
+clear()
+
+# Load the main menu
+menu()
