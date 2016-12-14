@@ -26,15 +26,18 @@ end
 
 # Public: Display the main menu
 # 
+# columns    - The currently selected width of the game board
+# rows       - The currently selected height of the game board
 # best_score - The lowest number of the turns the player has taken to complete the game
-def menu(best_score=0)
+def menu(columns=14, rows=9, best_score=0)
+  # Display menu options
   puts "Main menu:"
   puts "s = Start game"
   puts "c = Change size"
   puts "q = Quit"
 
   # Display high score if there is one
-  if $best_score > 0
+  if best_score > 0
     puts "Best game: #{$best_score} turns"
   else
     puts "No games played yet"
@@ -44,28 +47,30 @@ def menu(best_score=0)
   print "Please enter your choice: "
   input = gets.chomp
 
+  # Clear the menu screen
   clear
 
-  if input == "s"
-    # Starts the game with a new board
-    puts "START"
-  elsif input == "c"
-    # Change the size of the board
-    puts "CHANGE SIZE"
-  elsif input == "q"
-    # Exit the program
-    exit
-  else
-    # Reload the main menu if input is not recognised
-    menu
+  case input
+    when "s"
+      # Starts the game with a new board
+      start_game columns, rows
+    when "c"
+      # Change the size of the board
+      puts "CHANGE SIZE"
+    when "q"
+      # Exit the program
+      exit
+    else
+      # Reload the main menu if input is not recognised
+      menu
   end
 end
 
 # Public: Begin a new game
 #
-# columns - The width of the board (default value = 14)
-# rows    - The height of the board (default value =  9)
-def start_game(columns=14, rows=9)
+# columns - The width of the board
+# rows    - The height of the board
+def start_game(columns, rows)
   cur_board      = get_board(columns, rows)
   cur_completion = 0
   no_of_turns    = 0
@@ -79,12 +84,14 @@ def start_game(columns=14, rows=9)
     puts "Current completion: #{cur_completion}"
     puts "Number of turns: #{no_of_turns}"
 
-    # User chooses a color
+    # User chooses a color by entering the first letter of that color
     print "Choose a color: "
     cur_color = gets.chomp
+
+    # Convert the string of length 1 to a color symbol
     cur_color = to_color cur_color
 
-    #### Check to see if squares next to it are the same color
+    # Update color of top left square and any other squares that were previously the same color as it
     update_adjacent cur_board, 0, 0, cur_color
 
     clear
@@ -126,14 +133,14 @@ def print_board(board)
 
   # Loop through each square of the board
   (0...height).each do |row|
-    # Print a new line every row
-    puts
     (0...width).each do |column|
       # Print a colored square matching the value of the array element
       print "  ".colorize( :background => board[row][column])
     end
+
+    # Print a new line every row
+    puts
   end
-  puts
 end
 
 # Internal: Change a square to a new color and update the squares joined to it that were previously the same color
@@ -193,4 +200,4 @@ def to_color(color)
   end
 end
 
-start_game
+init
