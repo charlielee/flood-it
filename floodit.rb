@@ -1,3 +1,4 @@
+require "console_splash"
 
 def get_board(width, height)
   # TODO: Implement this method
@@ -18,5 +19,14 @@ def get_board(width, height)
   # of your implementation.
 end
 
-# TODO: Implement everything else as described in the
-#       assignment brief.
+# Splash screen
+splash = ConsoleSplash.new(25,88)
+splash.write_header("Flood-It", "Charles Lee", "0.0.1")
+splash.write_center(-3, "<Press any key to continue>")
+splash.write_horizontal_pattern("*")
+splash.write_vertical_pattern("*")
+splash.splash
+
+# Press any key to continue
+gets()
+system "clear"
