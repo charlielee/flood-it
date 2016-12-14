@@ -72,7 +72,7 @@ def start_game
 
   while completed == false
     # Display the current board
-    print_board = cur_board
+    print_board cur_board
 
     # Messages
     puts "Current completion: #{cur_completion}"
@@ -81,47 +81,114 @@ def start_game
     # User chooses a color
     print "Choose a color: "
     cur_color = gets.chomp
+    cur_color = to_color cur_color
+
+    #### Check to see if squares next to it are the same color
+    update_adjacent cur_board, 0, 0, cur_color
+
+    clear
   end
+end
 
-  # Internal: Get a 2d array of random colors that is the size of the board
-  #
-  # width  - The width of the board
-  # height - The height of the board
-  #
-  # Returns a 2d array of random colors equal to the size of the board
-  def get_board(width, height)
-    # Create a 2d array of the size of the board
-    board = Array.new(height) { Array.new(width) }
-    colors = [:red, :blue, :green, :yellow, :cyan, :magenta]
+# Internal: Get a 2d array of random colors that is the size of the board
+#
+# width  - The width of the board
+# height - The height of the board
+#
+# Returns a 2d array of random colors equal to the size of the board
+def get_board(width, height)
+  # Create a 2d array of the size of the board
+  board = Array.new(height) { Array.new(width) }
+  colors = [:red, :blue, :green, :yellow, :cyan, :magenta]
 
-    # Loop through each square of the board
-    (0...height).each do |row|
-      (0...width).each do |column|
-        # Get a random color
-        random_color = colors[rand 0...colors.length]
+  # Loop through each square of the board
+  (0...height).each do |row|
+    (0...width).each do |column|
+      # Get a random color
+      random_color = colors[rand 0...colors.length]
 
-        # Set each square as a random color
-        board[row][column] = random_color
-      end
+      # Set each square as a random color
+      board[row][column] = random_color
     end
-
-    # Return a 2d array of random colors
-    return board
   end
 
-  # Internal: Prints out a board to the console 
-  def print_board(board)
-    height = board.length
-    width = board[0].length
+# Return a 2d array of random colors
+  return board
+end
 
-    # Loop through each square of the board
-    (0...height).each do |row|
-      # Print a new line every row
-      puts
-      (0...width).each do |column|
-        # Print a colored square matching the value of the array element
-        print "  ".colorize( :background => board[row][column])
-      end
+# Internal: Prints out a board to the console 
+#
+# board - The 2d array of colors to display
+def print_board(board)
+  height = board.length
+  width = board[0].length
+
+  # Loop through each square of the board
+  (0...height).each do |row|
+    # Print a new line every row
+    puts
+    (0...width).each do |column|
+      # Print a colored square matching the value of the array element
+      print "  ".colorize( :background => board[row][column])
     end
   end
 end
+
+# Internal: Change a square to a new color and update the squares joined to it that were previously the same color
+#
+# board  - The 2d array of colors to use
+# column - The x position of the square to update
+# row    - The y position of the square to update
+# new_color  - The color to update the square to
+def update_adjacent(board, column, row, new_color)
+  # Get current color of selected square
+  old_color = board[row][column]
+
+  # Update color of selected square
+  board[row][column] = new_color
+
+  # Check is square ABOVE was the same color
+  if old_color == board[row+1][column]
+    update_adjacent board, column, row+1, new_color
+  end
+
+  # Check if the square to the RIGHT was the same color
+  if old_color == board[row][column+1]
+    update_adjacent board, column+1, row, new_color
+  end
+
+  # Check if the square BELOW was the same color
+  if old_color == board[row-1][column]
+    update_adjacent board, column, row-1, new_color
+  end
+
+  # Check if the square to the LEFT was the same color
+  if old_color == board[row][column-1]
+    update_adjacent board, column-1, row, new_color
+  end
+
+end
+
+# Internal: Convert a single letter into a color symbol
+#
+# color - A string of length 1 to convert to a color symbol
+def to_color(color)
+  case color
+    when "r"
+      return :red
+    when "g"
+      return :green
+    when "b"
+      return :blue
+    when "c"
+      return :cyan
+    when "m"
+      return :magenta
+    when "y"
+      return :yellow
+    else
+      return false
+  end
+end
+
+start_game
