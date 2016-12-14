@@ -11,14 +11,13 @@ def init()
   # Splash screen
   splash = ConsoleSplash.new(25,88)
   splash.write_header("Flood-It", "Charles Lee", "0.0.1")
-  splash.write_center(-3, "<Press any key to continue>")
+  splash.write_center(-3, "<Press enter to continue>")
   splash.write_horizontal_pattern("*")
   splash.write_vertical_pattern("*")
   splash.splash
 
-  # Press any key to continue
+  # Press enter to continue
   gets
-  clear
 
   # Load the main menu
   display_menu
@@ -28,8 +27,11 @@ end
 # 
 # columns    - The currently selected width of the game board
 # rows       - The currently selected height of the game board
-# best_score - The lowest number of the turns the player has taken to complete the game
+# best_score - The lowest number of the turns the player has taken
 def display_menu(columns=14, rows=9, best_score=0)
+  # Clear the screen
+  clear
+
   # Display menu options
   puts "Main menu:"
   puts "s = Start game"
@@ -38,7 +40,7 @@ def display_menu(columns=14, rows=9, best_score=0)
 
   # Display best score if there is one
   if best_score > 0
-    puts "Best game: #{$best_score} turns"
+    puts "Best game: #{best_score} turns"
   else
     puts "No games played yet"
   end
@@ -53,7 +55,7 @@ def display_menu(columns=14, rows=9, best_score=0)
   case input
     when "s"
       # Starts the game with a new board
-      start_game columns, rows
+      start_game columns, rows, best_score
     when "c"
       # Change the width of the board
       print "Width (Currently #{columns})? "
@@ -76,9 +78,10 @@ end
 
 # Public: Begin a new game
 #
-# columns - The width of the board
-# rows    - The height of the board
-def start_game(columns, rows)
+# columns    - The width of the board
+# rows       - The height of the board
+# best_score - The lowest number of the turns the player has taken
+def start_game(columns, rows, best_score)
   cur_board      = get_board(columns, rows)
   cur_completed  = 0
   no_of_turns    = 0
@@ -98,6 +101,11 @@ def start_game(columns, rows)
     # Convert the string of length 1 to a color symbol
     cur_color = to_color cur_color
 
+    # Return to main menu if "q" entered
+    if (cur_color == "q")
+      display_menu columns, rows, best_score
+    end
+
     # Update color of top left square and any squares joint to it
     update_adjacent cur_board, 0, 0, cur_color
 
@@ -109,6 +117,17 @@ def start_game(columns, rows)
 
     # Clear the screen
     clear
+  end
+
+  # When board is completed
+  puts "You won after #{no_of_turns} turns"
+  print "<Press enter to continue>"
+  gets
+
+  if (no_of_turns < best_score || best_score == 0)
+    display_menu columns, rows, no_of_turns
+  else 
+    display_menu columns, rows, best_score
   end
 end
 
@@ -236,7 +255,7 @@ def to_color(letter)
     when "y"
       return :yellow
     else
-      return false
+      return letter
   end
 end
 
