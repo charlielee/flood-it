@@ -94,7 +94,7 @@ def start_game(columns, rows, best_score)
     puts "Current completion: #{cur_completed}%"
     puts "Number of turns: #{no_of_turns}"
 
-    # User chooses a color by entering the first letter of that color
+    # User chooses color by entering the first letter of that color
     print "Choose a color: "
     cur_color = gets.chomp
 
@@ -106,8 +106,11 @@ def start_game(columns, rows, best_score)
       display_menu columns, rows, best_score
     end
 
-    # Update color of top left square and any squares joint to it
-    update_adjacent cur_board, 0, 0, cur_color
+   # Check if color entered is different to the previous color entered
+    if cur_color != cur_board[0][0]
+       # Update color of top left square and any squares joint to it
+      update_adjacent cur_board, 0, 0, cur_color
+    end
 
     # Update the number of turns
     no_of_turns += 1
@@ -259,4 +262,5 @@ def to_color(letter)
   end
 end
 
+# Intialise the program
 init
