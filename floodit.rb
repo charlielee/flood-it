@@ -1,10 +1,6 @@
 require "colorize"
 require "console_splash"
 
-$best_score = 0   # can remove by making score a parameter of menu method
-$columns    = 14 # can remove by making columns and rows parameters of start_game
-$rows       = 9 # can remove by making columns and rows parameters of start_game
-
 # Internal: Clears the screen
 def clear
   system "cls" or "clear"
@@ -21,15 +17,17 @@ def init()
   splash.splash
 
   # Press any key to continue
-  gets()
-  clear()
+  gets
+  clear
 
   # Load the main menu
-  menu()
+  menu
 end
 
 # Public: Display the main menu
-def menu
+# 
+# best_score - The lowest number of the turns the player has taken to complete the game
+def menu(best_score=0)
   puts "Main menu:"
   puts "s = Start game"
   puts "c = Change size"
@@ -46,7 +44,7 @@ def menu
   print "Please enter your choice: "
   input = gets.chomp
 
-  clear()
+  clear
 
   if input == "s"
     # Starts the game with a new board
@@ -64,8 +62,11 @@ def menu
 end
 
 # Public: Begin a new game
-def start_game
-  cur_board      = get_board($columns, $rows)
+#
+# columns - The width of the board (default value = 14)
+# rows    - The height of the board (default value =  9)
+def start_game(columns=14, rows=9)
+  cur_board      = get_board(columns, rows)
   cur_completion = 0
   no_of_turns    = 0
   completed      = false
