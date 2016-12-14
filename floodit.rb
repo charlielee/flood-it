@@ -30,7 +30,7 @@ end
 # rows       - The current selected height of the game board (default: 9).
 # best_score - The lowest number of the turns the player has taken to complete
 #              the game at the current board size (default: 0).
-def display_menu(columns: 14, rows: 9, best_score: 0)
+def display_menu(columns=14, rows=9, best_score=0)
   # Clear the screen
   clear
 
@@ -68,7 +68,7 @@ def display_menu(columns: 14, rows: 9, best_score: 0)
     height = gets.chomp.to_i
 
     # Reload the menu with the new board dimensions stored
-    display_menu columns: width, rows: height
+    display_menu width, height
   when "q"
     # Exit the program
     exit
@@ -132,7 +132,7 @@ def start_game(columns, rows, best_score)
 
   # Check if score is better than the "best_score"
   if no_of_turns < best_score || best_score == 0
-    display_menu columns, rows, best_score: no_of_turns
+    display_menu columns, rows, no_of_turns
   else 
     display_menu columns, rows, best_score
   end
